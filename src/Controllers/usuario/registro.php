@@ -12,7 +12,7 @@ class registro extends PublicController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $usuarioModel = new \UsuarioModel();
+            $usuarioModel = new \Dao\UsuarioModel();
 
             $datos = [
                 'nombre' => $_POST['nombre'],
@@ -31,7 +31,7 @@ class registro extends PublicController {
             $datos['password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
 
             if ($usuarioModel->guardarUsuario($datos)) {
-                echo "Usuario registrado";
+                echo "Usuario registrado correctamente";
             } else {
                 echo "Error al registrar";
             }

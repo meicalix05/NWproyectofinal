@@ -1,6 +1,8 @@
 <?php
 
-class UsuarioModel extends Model {
+namespace Dao;
+
+class UsuarioModel extends \Model {
 
     public function guardarUsuario($datos) {
 

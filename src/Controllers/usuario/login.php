@@ -8,11 +8,12 @@ class login extends PublicController {
 
     public function run(): void {
 
+        
         $this->viewName = "usuario/login";
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $usuarioModel = new \UsuarioModel();
+            $usuarioModel = new \Dao\UsuarioModel();
 
             $email = $_POST['email'];
             $password = $_POST['password'];
