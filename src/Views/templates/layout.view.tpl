@@ -27,6 +27,11 @@
     <nav id="menu">
       <ul>
         <li><a href="index.php?page={{PUBLIC_DEFAULT_CONTROLLER}}"><i class="fas fa-home"></i>&nbsp;Inicio</a></li>
+        <li>
+          <a href="/Proyecto_web/NWproyectofinal/index.php?page=Admin_Productos">
+            <i class="fas fa-leaf"></i> Lista de Productos
+        </a>
+      </li>
         {{foreach PUBLIC_NAVIGATION}}
             <li><a href="{{nav_url}}">{{nav_label}}</a></li>
         {{endfor PUBLIC_NAVIGATION}}

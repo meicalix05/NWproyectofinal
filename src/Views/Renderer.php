@@ -87,14 +87,18 @@ class Renderer
                 $htmlResult = self::_renderTemplate($template_code, $datos);
 
                 if ($render) {
-                    if($datos["USE_URLREWRITE"] == "1") {
-                        echo self::rewriteUrl($htmlResult);
-                    } else {
-                        echo $htmlResult;
-                    }
-                } else {
-                    return $htmlResult;
-                }
+                $useUrlRewrite = $datos["USE_URLREWRITE"] ?? "0";
+
+               if ($useUrlRewrite == "1") {
+        echo self::rewriteUrl($htmlResult);
+    } else {
+        echo $htmlResult;
+    }
+
+   } 
+         else {
+         return $htmlResult;
+    }
             }
         }
     }
