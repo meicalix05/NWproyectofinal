@@ -1,0 +1,154 @@
+/* --- Estabilización del Diseño (Evita el parpadeo) --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* --- Banner Superior Gris --- */
+.premium-banner-full {
+    background-color: #a0a0a0; /* Color gris de tu captura original */
+    padding: 60px 20px;
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.banner-overlay-dark h1 {
+    color: white;
+    font-size: 3rem;
+    margin: 0 0 10px 0;
+    font-weight: normal;
+}
+
+.banner-overlay-dark p {
+    color: white;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* --- Layout Principal --- */
+.category-main-layout {
+    display: flex; /* Alineación de sidebar y productos */
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 50px;
+    padding: 0 20px 50px;
+}
+
+/* --- Sidebar --- */
+.filter-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.filter-sidebar h3 {
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.filter-sidebar label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.price-inputs input {
+    width: 80px;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+/* --- Grid de Productos (3 Columnas) --- */
+.products-display {
+    flex-grow: 1;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas como en tu imagen */
+    gap: 30px;
+}
+
+/* --- Tarjeta de Producto --- */
+.flower-card {
+    text-align: center;
+    background: #fff;
+    padding-bottom: 20px;
+}
+
+/* Contenedor de imagen: CRUCIAL para evitar parpadeos */
+.image-box {
+    width: 100%;
+    height: 350px; /* Tamaño fijo */
+    background-color: #f9f9f9; /* Color de fondo mientras carga la imagen */
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Mantiene la proporción sin deformar */
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+.flower-card h4 {
+    font-size: 1rem;
+    color: #333;
+    margin: 10px 0 5px 0;
+    font-weight: 500;
+}
+
+.flower-card p {
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+/* --- Botón Detalles --- */
+.btn-detail {
+    display: inline-block;
+    color: #000;
+    text-decoration: underline;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+.btn-detail:hover {
+    color: #e91e63;
+}
+
+/* --- Ajuste para móviles --- */
+@media (max-width: 900px) {
+    .category-main-layout {
+        flex-direction: column;
+    }
+    .filter-sidebar {
+        width: 100%;
+    }
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

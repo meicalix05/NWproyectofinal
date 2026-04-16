@@ -1,103 +1,41 @@
 <?php
 
-namespace Dao\Cart;
+namespace Controllers;
 
-class Cart extends \Dao\Table
-{
-    public static function getProductosDisponibles()
-    {
-        $sqlAllProductosActivos = "SELECT * from products where productStatus in ('ACT');";
-        $productosDisponibles = self::obtenerRegistros($sqlAllProductosActivos, array());
+use Views\Renderer;
+use Dao\Products\Products as ProductsDao;
+use Dao\Products\Categories as CategoriesDao;
 
-        //Sacar el stock de productos con carretilla autorizada
-        $deltaAutorizada = \Utilities\Cart\CartFns::getAuthTimeDelta();
-        $sqlCarretillaAutorizada = "select productId, sum(crrctd) as reserved
-            from carretilla where TIME_TO_SEC(TIMEDIFF(now(), crrfching)) <= :delta
-            group by productId;";
-        $prodsCarretillaAutorizada = self::obtenerRegistros(
-            $sqlCarretillaAutorizada,
-            array("delta" => $deltaAutorizada)
-        );
-        //Sacar el stock de productos con carretilla no autorizada
-        $deltaNAutorizada = \Utilities\Cart\CartFns::getUnAuthTimeDelta();
-        $sqlCarretillaNAutorizada = "select productId, sum(crrctd) as reserved
-            from carretillaanom where TIME_TO_SEC(TIMEDIFF(now(), crrfching)) <= :delta
-            group by productId;";
-        $prodsCarretillaNAutorizada = self::obtenerRegistros(
-            $sqlCarretillaNAutorizada,
-            array("delta" => $deltaNAutorizada)
-        );
-        $productosCurados = array();
-        foreach ($productosDisponibles as $producto) {
-            if (!isset($productosCurados[$producto["productId"]])) {
-                $productosCurados[$producto["productId"]] = $producto;
-            }
-        }
-        foreach ($prodsCarretillaAutorizada as $producto) {
-            if (isset($productosCurados[$producto["productId"]])) {
-                $productosCurados[$producto["productId"]]["productStock"] -= $producto["reserved"];
-            }
-        }
-        foreach ($prodsCarretillaNAutorizada as $producto) {
-            if (isset($productosCurados[$producto["productId"]])) {
-                $productosCurados[$producto["productId"]]["productStock"] -= $producto["reserved"];
-            }
-        }
-        $productosDisponibles = null;
-        $prodsCarretillaAutorizada = null;
-        $prodsCarretillaNAutorizada = null;
-        return $productosCurados;
-    }
+class Category extends PublicController {
+    public function run() :void {
+        $viewData = array();
+        
+        // Capturamos el ID de la URL: index.php?page=Category&id=1
+        $id_categoria = $_GET["id"] ?? 0;
 
-    public static function getProductoDisponible($productId)
-    {
-        $sqlAllProductosActivos = "SELECT * from products where productStatus in ('ACT') and productId=:productId;";
-        $productosDisponibles = self::obtenerRegistros($sqlAllProductosActivos, array("productId" => $productId));
+        // 1. Buscamos la info de la categoría para el título
+        $categoria = CategoriesDao::getCategoryById($id_categoria);
 
-        //Sacar el stock de productos con carretilla autorizada
-        $deltaAutorizada = \Utilities\Cart\CartFns::getAuthTimeDelta();
-        $sqlCarretillaAutorizada = "select productId, sum(crrctd) as reserved
-            from carretilla where productId=:productId and TIME_TO_SEC(TIMEDIFF(now(), crrfching)) <= :delta
-            group by productId;";
-        $prodsCarretillaAutorizada = self::obtenerRegistros(
-            $sqlCarretillaAutorizada,
-            array("productId" => $productId, "delta" => $deltaAutorizada)
-        );
-        //Sacar el stock de productos con carretilla no autorizada
-        $deltaNAutorizada = \Utilities\Cart\CartFns::getUnAuthTimeDelta();
-        $sqlCarretillaNAutorizada = "select productId, sum(crrctd) as reserved
-            from carretillaanom where productId = :productId and TIME_TO_SEC(TIMEDIFF(now(), crrfching)) <= :delta
-            group by productId;";
-        $prodsCarretillaNAutorizada = self::obtenerRegistros(
-            $sqlCarretillaNAutorizada,
-            array("productId" => $productId, "delta" => $deltaNAutorizada)
-        );
-        $productosCurados = array();
-        foreach ($productosDisponibles as $producto) {
-            if (!isset($productosCurados[$producto["productId"]])) {
-                $productosCurados[$producto["productId"]] = $producto;
+        if ($categoria) {
+            $viewData["categoria_nombre"] = $categoria["nombre_categoria"];
+            $viewData["id_categoria"] = $categoria["id_categoria"];
+            
+            // 2. Buscamos los productos de esa categoría
+            $productos = ProductsDao::getProductsByCategory($id_categoria);
+            
+            // Si hay productos, los mandamos a la vista
+            if (count($productos) > 0) {
+                $viewData["productos"] = $productos;
+                $viewData["hasProducts"] = true;
+            } else {
+                $viewData["hasProducts"] = false;
             }
+        } else {
+            // Si la categoría no existe, mostramos "Categoría No Encontrada"
+            $viewData["categoria_nombre"] = "Categoría No Encontrada";
+            $viewData["hasProducts"] = false;
         }
-        foreach ($prodsCarretillaAutorizada as $producto) {
-            if (isset($productosCurados[$producto["productId"]])) {
-                $productosCurados[$producto["productId"]]["productStock"] -= $producto["reserved"];
-            }
-        }
-        foreach ($prodsCarretillaNAutorizada as $producto) {
-            if (isset($productosCurados[$producto["productId"]])) {
-                $productosCurados[$producto["productId"]]["productStock"] -= $producto["reserved"];
-            }
-        }
-        $productosDisponibles = null;
-        $prodsCarretillaAutorizada = null;
-        $prodsCarretillaNAutorizada = null;
-        return $productosCurados;
-    }
 
-    public static function getProducto($productId)
-    {
-        $sqlAllProductosActivos = "SELECT * from products where productId=:productId;";
-        $productosDisponibles = self::obtenerRegistros($sqlAllProductosActivos, array("productId" => $productId));
-        return $productosDisponibles;
+        Renderer::render("category", $viewData);
     }
 }

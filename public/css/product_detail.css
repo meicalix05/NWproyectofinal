@@ -1,0 +1,73 @@
+/* Contenedor principal para ocupar toda la pantalla sin chocar con el header */
+.product-page-container {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 60px); /* Ajusta según el tamaño de tu menú negro */
+    background-color: #f9f9f9;
+    margin-top: 0;
+}
+
+/* Columna de la imagen */
+.visual-side {
+    flex: 1;
+    max-width: 50%;
+}
+
+.visual-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Esto evita que la imagen se vea estirada o cortada */
+}
+
+/* Columna de información */
+.info-side {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    align-items: center; /* Centra el contenido verticalmente */
+}
+
+.content-wrapper {
+    max-width: 500px;
+}
+
+.brand-tag { color: #888; font-size: 0.85rem; }
+.product-title { font-size: 2.5rem; margin: 10px 0; font-weight: 300; }
+.product-price { font-size: 1.8rem; margin-bottom: 40px; }
+
+.section-label {
+    font-size: 1rem;
+    border-bottom: 2px solid #2d5a27;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.text-content { color: #666; line-height: 1.6; margin-bottom: 40px; }
+
+/* Fila de controles */
+.controls-row {
+    display: flex;
+    gap: 20px;
+}
+
+.quantity-box {
+    display: flex;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.quantity-box button { background: none; border: none; padding: 10px 15px; cursor: pointer; }
+.quantity-box input { width: 40px; border: none; text-align: center; }
+
+.add-cart-button {
+    background-color: #b5bc8a; /* Color oliva de tu diseño */
+    border: none;
+    padding: 15px 30px;
+    color: #4a4a4a;
+    font-weight: bold;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.details-link { color: #f08080; display: block; margin-top: 25px; text-decoration: underline; }

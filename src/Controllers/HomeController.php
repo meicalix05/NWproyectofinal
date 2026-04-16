@@ -1,20 +1,16 @@
 <?php
-
 namespace Controllers;
 
-use \Dao\Products\Products as ProductsDao;
-use \Views\Renderer as Renderer;
-use \Utilities\Site as Site;
+use Views\Renderer;
+use Dao\Products\Products as ProductsModel;
 
-class HomeController extends PublicController
-{
-    public function run(): void
-    {
-        Site::addLink("public/css/products.css");
-        $viewData = [];
-        $viewData["productsOnSale"] = ProductsDao::getDailyDeals();
-        $viewData["productsHighlighted"] = ProductsDao::getFeaturedProducts();
-        $viewData["productsNew"] = ProductsDao::getNewProducts();
+class HomeController extends PublicController {
+    public function run() :void {
+        $viewData = array();
+        
+        // Llamamos a la función que creamos en el paso 1
+        $viewData["dailyDeals"] = ProductsModel::getDailyDeals();
+        
         Renderer::render("home", $viewData);
     }
 }
